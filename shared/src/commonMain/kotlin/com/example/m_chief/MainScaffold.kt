@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
@@ -11,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 // Define our screens using the official Material Icons
@@ -22,12 +24,33 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScaffold() {
+fun MainScaffold(onLogout: () -> Unit = {}) { // <-- Added onLogout callback
     var currentScreen by remember { mutableStateOf<Screen>(Screen.Watu) }
     val screens = listOf(Screen.Watu, Screen.Kesi, Screen.Barua)
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
+        // --- NEW: Top App Bar with Logout Button ---
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text("M-CHIEF", fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = ChiefKhakiDark, // Using the darker uniform color
+                    titleContentColor = KenyaBlack,
+                    actionIconContentColor = KenyaBlack
+                ),
+                actions = {
+                    IconButton(onClick = onLogout) {
+                        Icon(
+                            imageVector = Icons.Filled.ExitToApp,
+                            contentDescription = "Secure Logout"
+                        )
+                    }
+                }
+            )
+        },
         bottomBar = {
             Column {
                 // The Authentic 5-Color Kenyan Flag Ribbon
