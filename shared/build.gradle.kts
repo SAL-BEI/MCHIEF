@@ -6,9 +6,13 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+
+    // --- ADDED SERIALIZATION PLUGIN ---
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
+    // Keep Android and iOS for mobile app targets
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -17,17 +21,6 @@ kotlin {
             baseName = "Shared"
             isStatic = true
         }
-    }
-
-    jvm()
-
-    js {
-        browser()
-    }
-
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        browser()
     }
 
     androidLibrary {
@@ -61,17 +54,17 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
-            // --- NEW: Supabase & Ktor Networking Dependencies ---
+            // Supabase & Ktor Networking Dependencies
             implementation("io.github.jan-tennert.supabase:postgrest-kt:2.4.3") // Database
             implementation("io.github.jan-tennert.supabase:gotrue-kt:2.4.3")    // Authentication
             implementation("io.ktor:ktor-client-core:2.3.11")                   // Core networking
             implementation("io.ktor:ktor-client-cio:2.3.11")                    // Network engine
+
+            // --- ADDED JSON SERIALIZATION LIBRARY ---
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-        }
-        jsMain.dependencies {
-            implementation(libs.wrappers.browser)
         }
     }
 }
